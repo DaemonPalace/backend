@@ -1,43 +1,39 @@
-# Use an official PHP image
+# Start with a PHP-FPM base image
 FROM php:8.2-fpm
 
-# Install system dependencies and PHP extensions
-RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip git && \
-    docker-php-ext-configure gd --with-freetype --with-jpeg && \
-    docker-php-ext-install gd pdo pdo_mysql && \
-    apt-get clean
-
-# Install necessary dependencies
+# Install dependencies for Nginx, Composer, and PHP extensions for Laravel
 RUN apt-get update && apt-get install -y \
+    nginx \
     curl \
     git \
-    unzip
+    unzip \
+    libpng-dev \
+    libjpeg-dev \
+    libfreetype6-dev \
+    libxml2-dev \
+    && rm -rf /var/lib/apt/lists/*
 
-# Install Composer
+# Install required PHP extensions for Laravel
+RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
+    && docker-php-ext-install gd pdo pdo_mysql xml
+
+# Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
+# Set the working directory to /var/www/html (Laravel's default directory)
+WORKDIR /var/www/html
 
-# Set the working directory
-WORKDIR /var/www
+# Copy the Laravel project into the container
+COPY . .
 
-# Copy the composer.lock and composer.json files
-COPY composer.json composer.lock /var/www/
+# Set permissions on Laravel's storage and bootstrap/cache
+RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
 
-# Install PHP dependencies (Composer)
-RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer && \
-    composer install --no-scripts --no-autoloader
+# Expose necessary ports (HTTP and PHP-FPM)
+EXPOSE 80 9000
 
-# Copy the rest of the application files
-COPY . /var/www
+# Copy Nginx configuration
+COPY nginx/default.conf /etc/nginx/sites-available/default
 
-# Set appropriate file permissions
-RUN chown -R www-data:www-data /var/www
-
-# Run composer dump-autoload
-RUN composer dump-autoload --optimize
-
-# Expose port 80
-EXPOSE 80
-
-# Start the PHP-FPM server
-CMD ["php-fpm"]
+# Start both Nginx and PHP-FPM
+CMD service nginx start && php-fpm
