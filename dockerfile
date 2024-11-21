@@ -1,5 +1,5 @@
 # Use an official PHP image
-FROM php:8.2-cli
+FROM php:8.2-fpm
 
 # Install system dependencies and PHP extensions
 RUN apt-get update && apt-get install -y libpng-dev libjpeg-dev libfreetype6-dev zip git && \
