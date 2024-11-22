@@ -8,4 +8,9 @@ Route::get('/user', function (Request $request) {
     return $request->user();
 })->middleware('auth:sanctum');
 
+Route::get('/test', function () {
+    return ['status' => 'ok'];
+});
+
 Route::apiResource('/products',ProductController::class);
+Route::apiResource('/orders',OrderController::class);
