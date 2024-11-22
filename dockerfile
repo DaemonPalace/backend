@@ -26,6 +26,9 @@ WORKDIR /var/www/html
 # Copy the Laravel project into the container
 COPY . .
 
+# Copy .env.example to .env if .env doesn't exist
+COPY .env.example .env
+
 # Install composer dependencies
 RUN composer install --no-dev --optimize-autoloader --no-interaction
 
