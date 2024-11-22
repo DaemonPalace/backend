@@ -10,19 +10,16 @@ use Illuminate\Support\Facades\Validator;
 
 class OrderController extends Controller
 {
+    // Display a listing of the orders
     public function index()
     {
         try {
-            $orders = Order::with('products')->get();
-            return response()->json(['orders' => $orders], 200);
+            $orders = Order::with('products')->get(); // Eager load related products
+            return response()->json($orders);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Error retrieving orders',
-                'error' => $e->getMessage()
-            ], 500);
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-
     public function store(Request $request)
     {
         $validator = Validator::make($request->all(), [
