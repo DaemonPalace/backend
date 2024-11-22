@@ -19,7 +19,7 @@ return new class extends Migration
             $table->string('ccn');
             $table->string('exp');
             $table->integer('cvv');
-            $table->string('total');
+            $table->integer('total');
             $table->timestamps();
         });
     }

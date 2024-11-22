@@ -11,7 +11,6 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],  // Replace with your GitHub Pages URL in production
     
     'allowed_origins_patterns' => [],
 

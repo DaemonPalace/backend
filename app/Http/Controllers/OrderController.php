@@ -29,7 +29,7 @@ class OrderController extends Controller
             'ccn' => 'required|string',
             'exp' => 'required|string',
             'cvv' => 'required|numeric',
-            'total' => 'required|string',
+            'total' => 'required|numeric',
             'products' => 'required|array',
             'products.*.id' => 'required|exists:products,id',
             'products.*.quantity' => 'required|integer|min:1'

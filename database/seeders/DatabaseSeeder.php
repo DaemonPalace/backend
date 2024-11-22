@@ -16,14 +16,14 @@ class DatabaseSeeder extends Seeder
     {
         $this->call(ProductTableSeeder::class);
         $this->call(OrderTableSeeder::class);
-        $existingUser = User::where('email', 'test1@example.com')->first();
+        $existingUser = User::where('email', 'admin@admin@poke.com')->first();
 
         if (!$existingUser) {
             // Proceed with the insert
             User::create([
-                'name' => 'Test User',
-                'email' => 'test1@example.com',
-                'password' => bcrypt('password'),
+                'name' => 'Administrador',
+                'email' => 'admin@poke.com',
+                'password' => bcrypt('admin'),
                 // other fields
             ]);
         } else {
