@@ -16,7 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('phone');
             $table->string('address');
-            $table->integer('ccn');
+            $table->string('ccn');
             $table->string('exp');
             $table->integer('cvv');
             $table->string('total');

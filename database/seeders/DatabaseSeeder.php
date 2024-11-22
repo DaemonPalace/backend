@@ -14,15 +14,15 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        $this->call(OrderTableSeeder::class);
         $this->call(ProductTableSeeder::class);
+        $this->call(OrderTableSeeder::class);
         $existingUser = User::where('email', 'test1@example.com')->first();
 
         if (!$existingUser) {
             // Proceed with the insert
             User::create([
                 'name' => 'Test User',
-                'email' => 'test@example.com',
+                'email' => 'test1@example.com',
                 'password' => bcrypt('password'),
                 // other fields
             ]);
