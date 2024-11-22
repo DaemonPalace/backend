@@ -11,7 +11,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['blackjack555y.github.io'],  // Replace with your GitHub Pages URL in production
+    'allowed_origins' => ['*'],  // Replace with your GitHub Pages URL in production
     
     'allowed_origins_patterns' => [],
 
@@ -21,5 +21,5 @@ return [
 
     'max_age' => 0,
 
-    'supports_credentials' => false,
+    'supports_credentials' => true,
 ];
