@@ -20,20 +20,31 @@ RUN docker-php-ext-configure gd --with-freetype --with-jpeg \
 # Install Composer globally
 RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
 
-# Set the working directory to /var/www/html (Laravel's default directory)
+# Set the working directory
 WORKDIR /var/www/html
 
 # Copy the Laravel project into the container
 COPY . .
 
-# Set permissions on Laravel's storage and bootstrap/cache
-RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cache
+# Install composer dependencies
+RUN composer install --no-dev --optimize-autoloader --no-interaction
 
-# Expose necessary ports (HTTP and PHP-FPM)
-EXPOSE 80 9000
+# Set proper permissions
+RUN chown -R www-data:www-data /var/www/html \
+    && chmod -R 755 /var/www/html/storage /var/www/html/bootstrap/cache
+
+# Create directory for PHP-FPM socket
+RUN mkdir -p /run/php && chmod 755 /run/php
 
 # Copy Nginx configuration
 COPY nginx/default.conf /etc/nginx/sites-available/default
+RUN ln -sf /etc/nginx/sites-available/default /etc/nginx/sites-enabled/
 
-# Start both Nginx and PHP-FPM
-CMD service nginx start && php-fpm
+# Copy startup script
+COPY docker-entrypoint.sh /usr/local/bin/
+RUN chmod +x /usr/local/bin/docker-entrypoint.sh
+
+EXPOSE 80
+
+# Use the entrypoint script to start services
+ENTRYPOINT ["docker-entrypoint.sh"]
