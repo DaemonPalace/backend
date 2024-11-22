@@ -29,7 +29,7 @@ class OrderController extends Controller
             'name' => 'required|string|max:255',
             'phone' => 'required|string|max:255',
             'address' => 'required|string',
-            'ccn' => 'required|stringc',
+            'ccn' => 'required|string',
             'exp' => 'required|string',
             'cvv' => 'required|numeric',
             'total' => 'required|string',
