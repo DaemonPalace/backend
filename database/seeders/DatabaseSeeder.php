@@ -14,8 +14,9 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
+        $this->call(OrderTableSeeder::class);
         $this->call(ProductTableSeeder::class);
-        $existingUser = User::where('email', 'test@example.com')->first();
+        $existingUser = User::where('email', 'test1@example.com')->first();
 
         if (!$existingUser) {
             // Proceed with the insert
