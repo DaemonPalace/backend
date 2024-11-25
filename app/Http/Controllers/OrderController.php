@@ -142,6 +142,20 @@ class OrderController extends Controller
         }
     }
 
+    public function changeState(Request $request,$id)
+    {
+            $order = Order::findOrFail($id);
+            $request->validate([
+                'state' => 'required|boolean',
+            ]);
+    
+            // Update the order's state
+            $order->state = $request->input('state');
+            $order->save();
+    
+            return response()->json(['message' => 'Order state updated successfully'], 200);
+        }
+
     public function destroy($id)
     {
         DB::beginTransaction();

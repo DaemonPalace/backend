@@ -21,3 +21,4 @@ Route::get('/test', function () {
 
 Route::apiResource('/products',ProductController::class);
 Route::apiResource('/orders',OrderController::class);
+Route::put('/api/orders/{id}/state', [OrderController::class, 'changeState']);
