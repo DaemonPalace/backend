@@ -90,72 +90,16 @@ class OrderController extends Controller
 
     public function update(Request $request, $id)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => 'string|max:255',
-            'phone' => 'string|max:255',
-            'address' => 'string',
-            'ccn' => 'string',
-            'exp' => 'string',
-            'cvv' => 'numeric',
-            'total' => 'string',
-            'products' => 'array',
-            'products.*.id' => 'exists:products,id',
-            'products.*.quantity' => 'integer|min:1',
-            'state' => 'boolean'
+        $order = Order::findOrFail($id);
+        $request->validate([
+            'state' => 'required',
         ]);
 
-        if ($validator->fails()) {
-            return response()->json(['errors' => $validator->errors()], 422);
-        }
+        $order->state = $request->input('state');
+        $order->save();
 
-        DB::beginTransaction();
-
-        try {
-            $order = Order::findOrFail($id);
-            $order->update($request->except('products'));
-
-            if ($request->has('products')) {
-                $productsData = [];
-                foreach ($request->products as $product) {
-                    $productsData[$product['id']] = ['quantity' => $product['quantity']];
-                }
-                
-                $order->products()->sync($productsData);
-            }
-
-            DB::commit();
-
-            $order->load('products');
-
-            return response()->json([
-                'message' => 'Order updated successfully',
-                'order' => $order
-            ], 200);
-
-        } catch (\Exception $e) {
-            DB::rollBack();
-            
-            return response()->json([
-                'message' => 'Error updating order',
-                'error' => $e->getMessage()
-            ], $e instanceof \Illuminate\Database\Eloquent\ModelNotFoundException ? 404 : 500);
-        }
+        return response()->json(['message' => 'Order state updated successfully'], 200);
     }
-
-    public function changeState(Request $request,$id)
-    {
-            $order = Order::findOrFail($id);
-            $request->validate([
-                'state' => 'required|boolean',
-            ]);
-    
-            // Update the order's state
-            $order->state = $request->input('state');
-            $order->save();
-    
-            return response()->json(['message' => 'Order state updated successfully'], 200);
-        }
-
     public function destroy($id)
     {
         DB::beginTransaction();
