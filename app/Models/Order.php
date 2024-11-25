@@ -13,7 +13,8 @@ class Order extends Model
         'ccn',
         'exp',
         'cvv',
-        'total'
+        'total',
+        'state'
     ];
 
     // Hide sensitive data from JSON/array output

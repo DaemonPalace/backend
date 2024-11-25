@@ -20,6 +20,7 @@ return new class extends Migration
             $table->string('exp');
             $table->integer('cvv');
             $table->integer('total');
+            $table->boolean('state');
             $table->timestamps();
         });
     }

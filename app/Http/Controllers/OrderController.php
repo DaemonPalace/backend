@@ -32,7 +32,8 @@ class OrderController extends Controller
             'total' => 'required|numeric',
             'products' => 'required|array',
             'products.*.id' => 'required|exists:products,id',
-            'products.*.quantity' => 'required|integer|min:1'
+            'products.*.quantity' => 'required|integer|min:1',
+            'state' => 'required|boolean'
         ]);
 
         if ($validator->fails()) {
@@ -99,7 +100,8 @@ class OrderController extends Controller
             'total' => 'string',
             'products' => 'array',
             'products.*.id' => 'exists:products,id',
-            'products.*.quantity' => 'integer|min:1'
+            'products.*.quantity' => 'integer|min:1',
+            'state' => 'boolean'
         ]);
 
         if ($validator->fails()) {
