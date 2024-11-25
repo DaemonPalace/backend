@@ -89,7 +89,14 @@ class OrderController extends Controller
     }
 
     public function update(Request $request, $id)
-    {
+{
+    \Log::info('Update request received', [
+        'id' => $id,
+        'state' => $request->input('state'),
+        'all_input' => $request->all()
+    ]);
+
+    try {
         $order = Order::findOrFail($id);
         $request->validate([
             'state' => 'required',
@@ -99,7 +106,12 @@ class OrderController extends Controller
         $order->save();
 
         return response()->json(['message' => 'Order state updated successfully'], 200);
+    } catch (\Exception $e) {
+        \Log::error('Update error: ' . $e->getMessage());
+        return response()->json(['error' => $e->getMessage()], 500);
     }
+}
+
     public function destroy($id)
     {
         DB::beginTransaction();
