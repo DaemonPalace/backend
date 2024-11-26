@@ -64,6 +64,25 @@ class AuthController extends Controller
         ]);
     }
 
+    public function verifyToken(Request $request)
+{
+    try {
+        $user = $request->user();  // Attempt to get the authenticated user
+
+        if ($user) {
+            return response()->json([
+                'message' => 'Token is valid.',
+                'user' => $user,
+            ], 200);
+        } else {
+            return response()->json(['message' => 'Token is invalid.'], 401);
+        }
+    } catch (\Exception $e) {
+        return response()->json(['message' => 'Invalid token.'], 401);
+    }
+}
+
+
 
 
 
